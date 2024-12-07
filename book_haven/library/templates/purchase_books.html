@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="purchase-books-page">
+    <div class="container">
+        <h1 class="page-title text-center mb-4">Purchase Books Collection</h1>
+
+        <!-- Filters -->
+        <div class="filters-container mb-4">
+            <div class="row">
+                <!-- Search section -->
+                <div class="col-md-12 mb-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control search-input" placeholder="Search books by title, author, or description">
+                        <button class="btn btn-primary search-btn" type="button">Search</button>
+                        <button class="btn btn-secondary reset-filters-btn ml-2" type="button">Reset Filters</button>
+                    </div>
+                </div>
+
+                <!-- Existing filters -->
+                <div class="col-md-4">
+                    <select class="form-select genre-filter">
+                        <option value="">All Genres</option>
+                        {% for genre in genres %}
+                        <option value="{{ genre }}">{{ genre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select price-filter">
+                        <option value="">All Prices</option>
+                        <option value="0-10">$0 - $10</option>
+                        <option value="10-20">$10 - $20</option>
+                        <option value="20-50">$20 - $50</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="bestseller-filter">
+                        <label class="form-check-label" for="bestseller-filter">
+                            Bestsellers Only
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="purchase-books-grid">
+            {% for book in purchase_books %}
+            <div class="purchase-book-card"
+                 data-genre="{{ book.genre }}"
+                 data-price="{{ book.price }}"
+                 data-bestseller="{{ book.is_bestseller|yesno:'True,False' }}"
+                 data-title="{{ book.title|lower }}"
+                 data-author="{{ book.author|lower }}"
+                 data-description="{{ book.description|lower }}">
+                <div class="purchase-book-image-container">
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="purchase-book-image">
+                    {% if book.is_bestseller %}
+                    <span class="bestseller-badge">Bestseller</span>
+                    {% endif %}
+                </div>
+                <div class="purchase-book-details">
+                    <div>
+                        <h3 class="purchase-book-title">{{ book.title }}</h3>
+                        <p class="purchase-book-author">{{ book.author }}</p>
+                        <p class="purchase-book-description">
+                            {{ book.description|truncatewords:30 }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="purchase-book-price">${{ book.price|floatformat:2 }}</p>
+                        <div class="purchase-book-actions">
+                            <a href="#" class="btn btn-primary add-to-cart-btn">Add to Cart</a>
+                            <a href="#" class="btn btn-secondary preview-btn">Preview</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-books-message">
+                <p>No books are currently available for purchase. Check back soon!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Select all filter elements
+    const genreFilter = document.querySelector('.genre-filter');
+    const priceFilter = document.querySelector('.price-filter');
+    const bestsellerFilter = document.querySelector('#bestseller-filter');
+    const searchInput = document.querySelector('.search-input');
+    const searchBtn = document.querySelector('.search-btn');
+    const resetFiltersBtn = document.querySelector('.reset-filters-btn');
+    const bookCards = document.querySelectorAll('.purchase-book-card');
+
+    function applyFilters() {
+        // Get current filter values
+        const selectedGenre = genreFilter.value;
+        const selectedPrice = priceFilter.value;
+        const bestsellerOnly = bestsellerFilter.checked;
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        let visibleBooksCount = 0;
+
+        // Apply filters to each book card
+        bookCards.forEach(card => {
+            // Genre filtering
+            const matchesGenre = !selectedGenre || card.dataset.genre === selectedGenre;
+
+            // Price filtering
+            const price = parseFloat(card.dataset.price);
+            let matchesPrice = true;
+            if (selectedPrice) {
+                const [minPrice, maxPrice] = selectedPrice.split('-').map(parseFloat);
+                matchesPrice = price >= minPrice && price <= maxPrice;
+            }
+
+            // Bestseller filtering
+            const isBestseller = card.dataset.bestseller.toLowerCase() === 'true';
+            const matchesBestseller = !bestsellerOnly || isBestseller;
+
+            // Search filtering
+            const matchesSearch = !searchTerm ||
+                card.dataset.title.includes(searchTerm) ||
+                card.dataset.author.includes(searchTerm) ||
+                card.dataset.description.includes(searchTerm);
+
+            // Combine all filters
+            if (matchesGenre && matchesPrice && matchesBestseller && matchesSearch) {
+                card.style.display = 'flex';
+                visibleBooksCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Update or show no results message
+        const noResultsMessage = document.querySelector('.no-books-message');
+        if (noResultsMessage) {
+            if (visibleBooksCount === 0) {
+                noResultsMessage.style.display = 'block';
+            } else {
+                noResultsMessage.style.display = 'none';
+            }
+        }
+    }
+
+    function resetFilters() {
+        // Reset all filter inputs
+        genreFilter.selectedIndex = 0;
+        priceFilter.selectedIndex = 0;
+        bestsellerFilter.checked = false;
+        searchInput.value = '';
+
+        // Show all books
+        bookCards.forEach(card => {
+            card.style.display = 'flex';
+        });
+
+        // Hide no results message if it exists
+        const noResultsMessage = document.querySelector('.no-books-message');
+        if (noResultsMessage) {
+            noResultsMessage.style.display = 'none';
+        }
+    }
+
+    // Event listeners for filters
+    searchBtn.addEventListener('click', applyFilters);
+    genreFilter.addEventListener('change', applyFilters);
+    priceFilter.addEventListener('change', applyFilters);
+    bestsellerFilter.addEventListener('change', applyFilters);
+
+    // Reset filters button
+    resetFiltersBtn.addEventListener('click', resetFilters);
+
+    // Optional: Allow filtering on Enter key press in search input
+    searchInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            applyFilters();
+        }
+    });
+});
+</script>
+{% endblock %}

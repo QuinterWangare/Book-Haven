@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Free Books - Book Haven{% endblock %}
+
+{% block content %}
+<main class="free-books-page">
+    <div class="container">
+        <h1 class="page-title text-center mb-4">Free Books Collection</h1>
+
+        <div class="free-books-grid">
+            {% for free_book in free_books %}
+            <div class="free-book-card">
+                <div class="free-book-image-container">
+                    <img src="{{ free_book.cover_image.url }}" alt="{{ free_book.title }}" class="free-book-image">
+                </div>
+                <div class="free-book-details">
+                    <h3 class="free-book-title">{{ free_book.title }}</h3>
+                    <p class="free-book-author">{{ free_book.author }}</p>
+                    <div class="free-book-actions">
+                        <a href="{{ free_book.download_link }}" class="btn btn-primary download-btn">Download</a>
+                        <a href="{% url 'read_ebook' free_book.id %}" class="btn btn-secondary read-btn">Read Online</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-books-message">
+                <p>No free books are currently available. Check back soon!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

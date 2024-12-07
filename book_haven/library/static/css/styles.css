@@ -1,0 +1,259 @@
+.navbar-image {
+  width: 110px;
+  border-radius: 400px;
+}
+
+.navbar-brand {
+    font-weight: bolder;
+    font-size: 30px !important;
+}
+
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #f4f4f4;
+  --text-color: #333;
+  --highlight-color: #00a3a3;
+  --border-radius: 8px;
+  --font-family: "Arial", sans-serif;
+  --btn-hover-color: #0056b3;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: #fff;
+}
+
+.container {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.library-header {
+  padding: 2rem 0;
+  background-color: #ffffff;
+  color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title-banner {
+  display: inline-block;
+  background-color: var(--highlight-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.banner-text {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.main-title {
+  font-size: 3rem;
+  margin: 1rem 0;
+  color: black;
+}
+
+.subtext {
+  font-size: 1.2rem;
+  color: black;
+  margin-bottom: 2rem;
+}
+
+.features {
+  display: flex;
+  gap: 2rem;
+}
+
+.sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar-btn {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.sidebar-btn:hover {
+  transform: translateY(-3px);
+}
+
+.sidebar-btn.active {
+  background-color: var(--highlight-color);
+}
+
+.feature-image {
+  flex: 2;
+  background-color: var(--primary-color);
+  padding: 0rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.feature-image img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+}
+
+.feature-description {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Page styling */
+main {
+  margin: 20px 0;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+}
+
+.search-input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid #ddd;
+  margin-right: 10px;
+  width: 300px;
+}
+
+.search-btn {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background-color: var(--highlight-color);
+}
+
+.books-container {
+  margin-top: 30px;
+}
+
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.books-table .text-muted {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.books-table .read-btn {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+}
+
+.books-table .read-btn:hover {
+  background-color: #0056b3;
+}
+
+.books-table th, .books-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.books-table th {
+  background-color: var(--primary-color);
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: white;
+  background-color: var(--primary-color);
+}
+
+.btn:hover {
+  background-color: var(--btn-hover-color);
+}
+
+.add-book-btn {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: var(--primary-color);
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+}
+
+.add-book-btn:hover {
+  background-color: var(--highlight-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .features {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex: 0;
+    margin-bottom: 20px;
+  }
+
+  .feature-image {
+    margin-top: 20px;
+  }
+
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

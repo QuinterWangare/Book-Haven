@@ -1,0 +1,40 @@
+<!-- read_ebook.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Read {{ book.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .ebook-reader {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .ebook-details {
+            margin-bottom: 20px;
+        }
+        .pdf-viewer {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="ebook-reader">
+        <div class="ebook-details">
+            <h1>{{ book.title }}</h1>
+            <p>Author: {{ book.author }}</p>
+        </div>
+
+        {% if book.ebook_file %}
+            <!-- PDF Viewer -->
+            <iframe class="pdf-viewer" src="{{ book.ebook_file.url }}" frameborder="0"></iframe>
+        {% else %}
+            <p>No ebook file available for this book.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
