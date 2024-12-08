@@ -318,6 +318,57 @@ input[type="text"], input[type="email"], input[type="password"] {
   color: #333;
 }
 
+/* Add to your existing CSS */
+.review-carousel {
+  overflow: hidden;
+}
+
+.review-wrapper {
+  display: flex;
+  transition: transform 0.3s ease;
+  gap: 15px;
+}
+
+.review-slide {
+  flex: 0 0 calc(33.333% - 15px);
+  transition: transform 0.3s ease;
+}
+
+.review-prev,
+.review-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.review-prev {
+  left: -20px;
+}
+
+.review-next {
+  right: -20px;
+}
+
+.review-card {
+  position: relative;
+}
+
+.delete-review-form {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.delete-review-form .btn-danger {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+}
+
 /* Contact Us Section */
 .contact-us-section {
   background-color: #f4f4f4;

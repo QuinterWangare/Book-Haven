@@ -1,4 +1,0 @@
-The Library Management System is a beginner-friendly web application designed to manage books in a simple library setup.
-It allows users to perform basic operations such as adding, editing, viewing, and deleting book records.
-Users can also search for books by title or author and mark books as "borrowed" or "available." The system includes a user authentication feature, enabling users to sign up, log in, and log out securely.
-Built using Django, this project combines essential CRUD functionality with a clean and intuitive interface, making it an excellent introduction to web development and database management.

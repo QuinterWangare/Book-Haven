@@ -4,13 +4,21 @@ from django.contrib.auth import login, logout, authenticate
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.db.models import Q
-from .models import TeamMember, Book, FreeBook, PurchaseBook, Review
-from .forms import TeamMemberForm, BookForm
+from .models import TeamMember, Book, FreeBook, PurchaseBook, Review, ContactSubmission
+from .forms import TeamMemberForm, BookForm, ReviewForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    reviews = Review.objects.order_by('-created_at')  # Get all reviews
+    context = {
+        # Your existing context variables
+        'reviews': reviews
+    }
+    return render(request, 'home.html', context)
 
 
 def login(request):
@@ -160,33 +168,55 @@ def purchase_books(request):
 
 
 def add_review(request):
-    return render(request, 'add_review.html')
-
-
-def submit_review(request):
     if request.method == 'POST':
-        # Process the review submission
-        name = request.POST.get('name')
-        book_title = request.POST.get('book_title')
-        rating = request.POST.get('rating')
-        review_text = request.POST.get('review_text')
-        reviewer_image = request.FILES.get('reviewer_image')
+        form = ReviewForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your review has been submitted successfully!')
+            return redirect('home')  # Redirect back to home page
+    else:
+        form = ReviewForm()
 
-        # Create a new review
-        review = Review.objects.create(
-            name=name,
-            book_title=book_title,
-            rating=rating,
-            review_text=review_text,
-            reviewer_image=reviewer_image
-        )
+    return render(request, 'add_review.html', {'form': form})
 
-        messages.success(request, 'Your review has been submitted successfully!')
-        return redirect('user_reviews')
 
-    return redirect('add_review')
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    # Optional: Add a check to ensure only the review owner or an admin can delete
+    if request.user.is_staff or request.user.is_superuser:
+        review.delete()
+        messages.success(request, 'Review deleted successfully.')
+    else:
+        messages.error(request, 'You do not have permission to delete this review.')
+
+    return redirect('home')
+
 
 def user_reviews(request):
     # Fetch all reviews from the database
     reviews = Review.objects.all().order_by('-created_at')
     return render(request, 'user_reviews.html', {'reviews': reviews})
+
+
+def submit_contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message', '')
+
+        # Validate input
+        if not name or not email:
+            return JsonResponse({'success': False, 'error': 'Name and email are required.'}, status=400)
+
+        # Save submission to database
+        submission = ContactSubmission.objects.create(
+            name=name,
+            email=email,
+            message=message
+        )
+
+        return JsonResponse({'success': True, 'message': 'Thank you for your submission!'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)

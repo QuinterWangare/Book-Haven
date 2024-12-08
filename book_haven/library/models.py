@@ -81,12 +81,19 @@ class PurchaseBook(models.Model):
         verbose_name_plural = "Purchase Books"
 
 class Review(models.Model):
-    name = models.CharField(max_length=100)
-    book_title = models.CharField(max_length=200)
-    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
     review_text = models.TextField()
-    reviewer_image = models.ImageField(upload_to='reviewer_images/', null=True, blank=True)
+    reviewer_name = models.CharField(max_length=100)
+    reviewer_image = models.ImageField(upload_to='reviewer_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name}'s review of {self.book_title}"
+        return f"Review by {self.reviewer_name}"
+
+class ContactSubmission(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.email}) - Message: {self.message or 'No message provided'}"

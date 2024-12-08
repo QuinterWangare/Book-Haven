@@ -43,8 +43,8 @@ urlpatterns = [
     path('purchase-books/', views.purchase_books, name='purchase_books'),
     path('reviews/', views.user_reviews, name='user_reviews'),
     path('reviews/add/', views.add_review, name='add_review'),
-    path('reviews/submit/', views.submit_review, name='submit_review'),
-
+    path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),
+    path('submit-contact', views.submit_contact, name='submit_contact'),
 ]
 
 if settings.DEBUG:
